@@ -51,10 +51,10 @@
                 </div>
                 <div class="mb-3">
                     {{ form.code }}
-                    {% if  form.lang.code %}
+                    {% if  form.code.errors %}
                         <div class="alert alert-danger" role="alert">
                             <ul>
-                                {% for error in form.lang.code %}
+                                {% for error in form.code.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
