@@ -32,6 +32,7 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
+                        <th scope="col">Язык</th>
                         <th scope="col">Дата создания</th>
                     </tr>
                     </thead>
@@ -48,6 +49,10 @@
                                 <a href="{% url 'snippet-edit' snippet.id %}">
                                     <i class="fa-solid fa-pencil"></i>
                                 </a>
+                            </td>
+                            <td>
+                                <i class="fa-brands {{ snippet.icon_class }}"></i>
+                                {{ snippet.lang }}
                             </td>
                             <td>{{ snippet.creation_date }}</td>
                         </tr>

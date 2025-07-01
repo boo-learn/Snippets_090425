@@ -2,6 +2,12 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
+from django.db.models import F
+from MainApp.models import LANG_ICONS
+
+
+def get_icon_class(lang):
+    return LANG_ICONS.get(lang)
 
 
 def index_page(request):
@@ -27,6 +33,8 @@ def add_snippet_page(request):
 
 def snippets_page(request):
     snippets = Snippet.objects.all()
+    for snippet in snippets:
+        snippet.icon_class = get_icon_class(snippet.lang)
     context = {
         'pagename': 'Просмотр сниппетов',
         'snippets': snippets
@@ -36,6 +44,9 @@ def snippets_page(request):
 
 def snippet_detail(request, id):
     snippet = get_object_or_404(Snippet, id=id)
+    snippet.views_count = F('views_count') + 1
+    snippet.save(update_fields=["views_count"])  # -> SET v_c = 11 | SET v_c =  v_c + 1
+    snippet.refresh_from_db()
     context = {
         'pagename': f'Сниппет: {snippet.name}',
         'snippet': snippet

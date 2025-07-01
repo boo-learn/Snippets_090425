@@ -21,10 +21,3 @@ class SnippetForm(forms.ModelForm):
         if len(name) < 5:
             raise forms.ValidationError("Name too short")
         return name
-
-
-    def clean_code(self):
-        code = self.cleaned_data["code"]
-        if "(" not in code:
-            raise forms.ValidationError("Need (")
-        return code
