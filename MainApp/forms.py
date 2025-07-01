@@ -1,5 +1,6 @@
 from django import forms
-from MainApp.models import LANG_CHOICES
+from MainApp.models import LANG_CHOICES, Snippet
+
 
 
 class SnippetForm(forms.ModelForm):
