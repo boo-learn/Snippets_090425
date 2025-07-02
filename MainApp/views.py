@@ -4,6 +4,7 @@ from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
 from django.db.models import F
 from MainApp.models import LANG_ICONS
+from django.contrib import auth
 
 
 def get_icon_class(lang):
@@ -80,3 +81,21 @@ def snippet_edit(request, id):
             form.save()
 
         return redirect('snippets-list')
+
+
+def login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('home')
+        else:
+            pass
+
+
+def user_logout(request):
+    auth.logout(request)
+    return redirect('home')
