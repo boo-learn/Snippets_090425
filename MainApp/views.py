@@ -47,6 +47,14 @@ def snippets_page(request):
     return render(request, 'pages/view_snippets.html', context)
 
 
+def snippets_my(request):
+    snippets = Snippet.objects.filter(user=request.user)
+    context = {
+        'pagename': 'Мои сниппеты',
+        'snippets': snippets
+    }
+    return render(request, 'pages/view_snippets.html', context)
+
 def snippet_detail(request, id):
     snippet = get_object_or_404(Snippet, id=id)
     snippet.views_count = F('views_count') + 1
