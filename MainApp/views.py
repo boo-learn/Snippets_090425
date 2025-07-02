@@ -93,7 +93,11 @@ def login(request):
             auth.login(request, user)
             return redirect('home')
         else:
-            pass
+            context = {
+                "errors": ["Неверные username или password"],
+                "username": username
+            }
+            return render(request, "pages/index.html", context)
 
 
 def user_logout(request):
