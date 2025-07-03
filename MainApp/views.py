@@ -137,4 +137,7 @@ def user_registration(request):
            form.save()
            return redirect('home')
        else:
-           ...
+           context = {
+               "form": form
+           }
+           return render(request, "pages/registration.html", context)
