@@ -6,7 +6,7 @@ from MainApp.models import LANG_CHOICES, Snippet
 class SnippetForm(forms.ModelForm):
     class Meta:
         model = Snippet
-        fields = ["name", "lang", "code"]
+        fields = ["name", "lang", "code", "public"]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Название сниппета'}),
             'lang': forms.Select(
