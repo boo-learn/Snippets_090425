@@ -1,11 +1,12 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from MainApp.models import Snippet
-from MainApp.forms import SnippetForm
+from MainApp.forms import SnippetForm, UserRegistrationForm
 from django.db.models import F, Q
 from MainApp.models import LANG_ICONS
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+
 
 
 def get_icon_class(lang):
@@ -120,3 +121,20 @@ def login(request):
 def user_logout(request):
     auth.logout(request)
     return redirect('home')
+
+
+def user_registration(request):
+   if request.method == "GET": # page with form
+       form = UserRegistrationForm()
+       context = {
+           "form": form
+       }
+       return render(request, "pages/registration.html", context)
+
+   if request.method == "POST": # form data
+       form = UserRegistrationForm(request.POST)
+       if form.is_valid():
+           form.save()
+           return redirect('home')
+       else:
+           ...
