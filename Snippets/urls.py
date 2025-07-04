@@ -14,5 +14,6 @@ urlpatterns = [
     path('login', views.login, name="login"),
     path('logout', views.user_logout, name='logout'),
     path('registration', views.user_registration, name='registration'),
+    path('comment/add', views.comment_add, name="comment_add"),
 ]
 # url: snippet/2/delete
