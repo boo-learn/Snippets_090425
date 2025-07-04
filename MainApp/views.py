@@ -36,17 +36,32 @@ def add_snippet_page(request):
             return render(request, 'pages/add_snippet.html', context)
 
 
+# snippets/list
+# snippets/list?sort=name
+# snippets/list?sort=lang
+# snippets/list?sort=-lang
+
+# 1. Сортировка выключена
+# 2. Сортировка по возрастанию
+# 3. Сортировка по убыванию
+
 def snippets_page(request):
     if request.user.is_authenticated:  # auth: all public + self private
         snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user))
     else:  # not auth: all public
         snippets = Snippet.objects.filter(public=True)
 
+    # sort
+    sort = request.GET.get("sort")
+    if sort:
+        snippets = snippets.order_by(sort)
+
     for snippet in snippets:
         snippet.icon_class = get_icon_class(snippet.lang)
     context = {
         'pagename': 'Просмотр сниппетов',
-        'snippets': snippets
+        'snippets': snippets,
+        'sort': sort
     }
     return render(request, 'pages/view_snippets.html', context)
 
