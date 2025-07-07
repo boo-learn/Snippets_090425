@@ -99,7 +99,7 @@ def snippets_page(request, my_snippets):
         snippet.icon_class = get_icon_class(snippet.lang)
 
     # TODO: работает или пагинация или сортировка по полю!
-    paginator = Paginator(snippets, 10)
+    paginator = Paginator(snippets, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -107,7 +107,9 @@ def snippets_page(request, my_snippets):
         'page_obj': page_obj,
         'sort': sort,
         'LANG_CHOICES': LANG_CHOICES,
-        'users': User.objects.all()
+        'users': User.objects.all(),
+        'lang': lang,
+        'user_id': user_id
     }
     return render(request, 'pages/view_snippets.html', context)
 
