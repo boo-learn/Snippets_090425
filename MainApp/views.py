@@ -11,10 +11,6 @@ from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 
 
-def get_icon_class(lang):
-    return LANG_ICONS.get(lang)
-
-
 def index_page(request):
     context = {'pagename': 'PythonBin'}
     return render(request, 'pages/index.html', context)
@@ -95,19 +91,21 @@ def snippets_page(request, my_snippets):
     if sort:
         snippets = snippets.order_by(sort)
 
-    for snippet in snippets:
-        snippet.icon_class = get_icon_class(snippet.lang)
+    # for snippet in snippets:
+    #     snippet.icon_class = get_icon_class(snippet.lang)
 
     # TODO: работает или пагинация или сортировка по полю!
     paginator = Paginator(snippets, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    users = User.objects.filter(snippet__isnull=False).distinct()
     context = {
         'pagename': pagename,
         'page_obj': page_obj,
         'sort': sort,
         'LANG_CHOICES': LANG_CHOICES,
-        'users': User.objects.all(),
+        'users': users,
         'lang': lang,
         'user_id': user_id
     }
