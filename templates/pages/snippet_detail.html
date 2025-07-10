@@ -24,9 +24,18 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-9">
                             <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
                                 <pre><code class="language-{{ snippet.lang }}">{{ snippet.code }}</code></pre>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="col-md-3">
+                                <h5>Теги:</h5>
+{#                            'ManyRelatedManager' object is not iterable #}
+                                {% for tag in snippet.tags.all %}
+                                    <span class="badge bg-primary me-2 mb-1">{{ tag.name }}</span>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
