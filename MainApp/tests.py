@@ -1,6 +1,6 @@
 import pytest
 from django.test import TestCase
-from .models import Snippet
+from .models import Snippet, Tag
 from django.contrib.auth.models import User
 
 @pytest.mark.django_db
@@ -38,6 +38,33 @@ class TestSnippetModel:
         assert snippet.user.username == "testuser"
         assert not snippet.public
         assert snippet.code == "console.log('Hello');"
+
+
+@pytest.mark.django_db
+class TestTagModel:
+    """Тесты для модели Tag"""
+
+    def test_tag_creation(self):
+        """Тест создания тега"""
+        tag = Tag.objects.create(name="Python")
+        assert tag.name == "Python"
+
+    def test_duplicate_tag_names_not_allowed(self):
+        """Тест, что теги с одинаковыми именами недопустимы"""
+        from django.db import IntegrityError, transaction
+
+        # Создаем первый тег
+        tag1 = Tag.objects.create(name="Python")
+
+        # Пытаемся создать второй тег с тем же именем
+        # Должно возникнуть исключение IntegrityError
+        with pytest.raises(IntegrityError):
+            with transaction.atomic():
+                Tag.objects.create(name="Python")
+
+        # Проверяем, что в базе данных остался только один тег с именем "Python"
+        assert Tag.objects.filter(name="Python").count() == 1
+        assert Tag.objects.get(name="Python") == tag1
 
 
 # Преимущества:
