@@ -5,6 +5,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal
 from django.contrib.auth.models import User
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Сигналы
 snippet_view = Signal()
 

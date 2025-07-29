@@ -11,10 +11,16 @@ from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib import messages
 from MainApp.signals import snippet_view
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
+    logger.debug("1. Отладочное сообщение")
+    logger.info("2. Info сообщение")
+    logger.error("3. Error сообщение")
     return render(request, 'pages/index.html', context)
 
 
