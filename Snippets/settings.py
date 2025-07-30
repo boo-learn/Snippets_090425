@@ -27,81 +27,50 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,  # Важно: если у вас уже есть логгеры, это позволит их не отключать
-#
-#     'formatters': {
-#         'verbose': {
-#             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-#             'style': '{',
-#         },
-#         'simple': {
-#             'format': '{levelname} {message}',
-#             'style': '{',
-#         },
-#     },
-#
-#     'handlers': {
-#         'file': {
-#             'level': 'INFO',  # Уровень логирования (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': BASE_DIR / 'django_debug.log',  # Путь к файлу логов
-#             'maxBytes': 1024 * 1024 * 5,  # 5 MB
-#             'backupCount': 5,  # Keep up to 5 files
-#             'formatter': 'verbose',
-#         },
-#         # Вы можете добавить другие обработчики, например, для вывода в консоль:
-#         # 'console': {
-#         #     'level': 'INFO',
-#         #     'class': 'logging.StreamHandler',
-#         #     'formatter': 'simple',
-#         # },
-#     },
-#
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],  # Используем наш обработчик 'file'
-#             'level': 'INFO',  # Уровень логирования для логгера 'django'
-#             'propagate': False,  # Важно: предотвращает двойное логирование
-#         },
-#         # Вы можете добавить собственный логгер для вашего приложения:
-#         # 'myapp': { # Замените 'myapp' на имя вашего приложения
-#         #     'handlers': ['file'],
-#         #     'level': 'DEBUG',
-#         #     'propagate': False,
-#         # },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
 
-# LOGGING = {
-# 'version': 1,
-# 'disable_existing_loggers': False, # Не отключаем существующие логгеры
-#
-# 'formatters': {
-#     'sql_formatter': {
-#         'format': '{levelname} {message} (Duration: {duration:.3f}s)', # Формат для SQL
-#         'style': '{',
-#     },
-# },
-#
-# 'handlers': {
-#     'console_sql': { # Отдельный обработчик для SQL-запросов
-#         'class': 'logging.StreamHandler',
-#         'formatter': 'sql_formatter',
-#         'level': 'DEBUG',
-#     },
-# },
-#
-# 'loggers': {
-#     'django.db.backends': {
-#         'handlers': ['console_sql'], # Используем наш специальный обработчик
-#         'level': 'DEBUG',           # Уровень DEBUG для отображения всех запросов
-#         'propagate': False,         # Очень важно: отключаем всплытие, чтобы SQL не дублировался другими логгерами
-#     },
-# }
-# }
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
 
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'django_debug.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'MainApp': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
 
 # Application definition
 
@@ -197,7 +166,6 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 
 # Django Extensions Shell Plus Configuration
 SHELL_PLUS_PRE_IMPORTS = [
