@@ -65,7 +65,7 @@ def add_snippet_page(request):
 #     }
 #     return render(request, 'pages/view_snippets.html', context)
 
-def snippets_page(request, my_snippets):
+def snippets_page(request, my_snippets, num_snippets_on_page=5):
     if my_snippets:
         if not request.user.is_authenticated:
             raise PermissionDenied
@@ -104,7 +104,7 @@ def snippets_page(request, my_snippets):
     #     snippet.icon_class = get_icon_class(snippet.lang)
 
     # TODO: работает или пагинация или сортировка по полю!
-    paginator = Paginator(snippets, 5)
+    paginator = Paginator(snippets, num_snippets_on_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
