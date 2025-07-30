@@ -6,6 +6,19 @@ from django.test import RequestFactory
 from django.contrib.auth.models import User, AnonymousUser
 from .models import Snippet
 
+from django.contrib.messages.storage.fallback import FallbackStorage
+from django.contrib.sessions.middleware import SessionMiddleware
+
+
+def add_messages_and_session_to_request(request):
+    # Attach session for messages to work correctly
+    middleware = SessionMiddleware(lambda r: None)  # Mock the get_response callable
+    middleware.process_request(request)
+    request.session.save()  # Ensure a session key is generated
+
+    # Attach message storage
+    setattr(request, '_messages', FallbackStorage(request))
+
 
 class TestIndexPage:
     def test_index(self):
@@ -55,6 +68,7 @@ class TestAddSnippetPage:
         )
         request = self.factory.post(reverse('snippet-add'), form_data)
         request.user = user
+        add_messages_and_session_to_request(request)
         response = add_snippet_page(request)
 
         snippet = Snippet.objects.get(id=1)
@@ -63,5 +77,3 @@ class TestAddSnippetPage:
         assert snippet.name == form_data["name"]
         assert snippet.lang == form_data["lang"]
         assert snippet.public == form_data["public"]
-
-
