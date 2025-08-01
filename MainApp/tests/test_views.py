@@ -1,10 +1,10 @@
 import pytest
-from .views import index_page, add_snippet_page, snippets_page, snippet_detail
+from MainApp.views import index_page, add_snippet_page, snippets_page, snippet_detail
 from django.urls import reverse
 from django.test import Client
 from django.test import RequestFactory
 from django.contrib.auth.models import User, AnonymousUser
-from .models import Snippet, Comment
+from MainApp.models import Snippet, Comment
 from MainApp.factories import UserFactory, SnippetFactory, CommentFactory
 
 from django.contrib.messages.storage.fallback import FallbackStorage

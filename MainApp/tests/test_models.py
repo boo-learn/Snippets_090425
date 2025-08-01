@@ -1,6 +1,6 @@
 import pytest
 from django.test import TestCase
-from .models import Snippet, Tag
+from MainApp.models import Snippet, Tag
 from django.contrib.auth.models import User
 
 @pytest.mark.django_db

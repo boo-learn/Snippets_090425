@@ -1,6 +1,6 @@
 import pytest
-from .models import Tag, Snippet, Comment
-from .factories import TagFactory, SnippetFactory, CommentFactory
+from MainApp.models import Tag, Snippet, Comment
+from MainApp.factories import TagFactory, SnippetFactory, CommentFactory
 
 
 # Задание-1
