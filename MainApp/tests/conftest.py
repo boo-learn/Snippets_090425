@@ -1,11 +1,17 @@
 import pytest
 from MainApp.factories import TagFactory
 import pytest
+from MainApp.factories import UserFactory, SnippetFactory
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
+
+@pytest.fixture
+def user():
+    """Фикстура для создания пользователя"""
+    return UserFactory()
 
 @pytest.fixture
 def tag_factory():
@@ -16,6 +22,14 @@ def tag_factory():
         return tags
 
     return _create_tags
+
+@pytest.fixture
+def snippets_factory():
+    def _create_snippets(n, **kwargs):
+        snippets = SnippetFactory.create_batch(n=n, **kwargs)
+        return snippets
+
+    return _create_snippets
 
 
 # Фикстура для настройки и очистки драйвера браузера

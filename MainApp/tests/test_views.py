@@ -422,12 +422,6 @@ def client():
 
 
 @pytest.fixture
-def user():
-    """Фикстура для создания пользователя"""
-    return UserFactory()
-
-
-@pytest.fixture
 def authenticated_client(client, user):
     """Фикстура для создания аутентифицированного клиента"""
     client.force_login(user)

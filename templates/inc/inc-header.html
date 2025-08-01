@@ -23,11 +23,13 @@
                             Посмотреть сниппеты
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-info" href="{% url 'snippets-my' %}">
-                            Мои сниппеты
-                        </a>
-                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-info" href="{% url 'snippets-my' %}">
+                                Мои сниппеты
+                            </a>
+                        </li>
+                    {% endif %}
                     {% if request.user.is_authenticated %}
                         <li class="ms-4">
                             <div class="pt-2" style="color: white">Welcome, {{ request.user.username }}
@@ -67,9 +69,9 @@
                             </div>
                         </li>
                         <li>
-                        <a class="btn btn-success" href="{% url 'registration' %}">
-                            Регистрация
-                        </a>
+                            <a class="btn btn-success" href="{% url 'registration' %}">
+                                Регистрация
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
