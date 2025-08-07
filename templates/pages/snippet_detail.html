@@ -4,6 +4,45 @@
 {% block style %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/prism.css' %}">
+    <style>
+        .copy-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #495057;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-button:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+            color: #212529;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-button::before {
+            content: "📋";
+            margin-right: 6px;
+            font-size: 16px;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -25,14 +64,15 @@
                     <hr>
                     <div class="row">
                         <div class="col-9">
-                            <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
+                            <div class="p-2 h-100 position-relative" style="border:1px solid #ced4da; border-radius:5px;">
+                                <a onclick="copyToBuffer(`{{ snippet.code }}`)" class="copy-button" href="#">copy</a>
                                 <pre><code class="language-{{ snippet.lang }}">{{ snippet.code }}</code></pre>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="col-md-3">
                                 <h5>Теги:</h5>
-{#                            'ManyRelatedManager' object is not iterable #}
+                                {#                            'ManyRelatedManager' object is not iterable #}
                                 {% for tag in snippet.tags.all %}
                                     <span class="badge bg-primary me-2 mb-1">{{ tag.name }}</span>
                                 {% endfor %}
@@ -142,5 +182,10 @@
         {#            </div>#}
         {#        </div>#}
     </div>
+
+{% endblock %}
+{% block scripts %}
+	{{ block.super }}
     <script src="{% static 'js/prism.js' %}"></script>
+    <script src="{% static 'js/utils.js' %}"></script>
 {% endblock %}

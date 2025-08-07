@@ -1,10 +1,11 @@
 const codeCount = document.getElementById('count');
-const textArea = document.querySelector('textarea');
+const textArea = document.querySelector('textarea[name="code"]');
+const maxlength = textArea.getAttribute("maxlength");
 
 const numChars = textArea.value.length;
-codeCount.textContent = `${numChars}/5000`;
+codeCount.textContent = `${numChars}/${maxlength}`;
 
 textArea.addEventListener('input', () => {
     const numChars = textArea.value.length;
-    codeCount.textContent = `${numChars}/5000`;
+    codeCount.textContent = `${numChars}/${maxlength}`;
 })

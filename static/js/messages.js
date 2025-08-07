@@ -14,5 +14,9 @@ function closeMessages() {
     }
 }
 
+// function sendMessage(...){
+//     ...
+// }
+
 const alertsBox = document.getElementById("alertsFixedContainer");
 setTimeout(closeMessages, 2000);
