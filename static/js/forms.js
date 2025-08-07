@@ -22,7 +22,7 @@ function saveDraft() {
         lang: lang.value,
         code: code.value,
     }
-    sendMessage("Данные формы сохранены");
+    // sendMessage("Данные формы сохранены");
     localStorage.setItem(formDataKey, JSON.stringify(formData));
 }
 
@@ -37,20 +37,49 @@ function restoreDraft() {
     lang.value = formData.lang;
     code.value = formData.code;
     sendMessage("Данные формы восстановлены");
-    localStorage.clear();
+    discardDraft();
 }
 
 // 3. Проверки данных формы
 function checkDraft() {
     const data = localStorage.getItem(formDataKey);
     if (data) {
-        if (confirm("Восстановить данные формы?")) {
-            restoreDraft();
-        }
+        showRestorePrompt()
     }
 }
 
 setInterval(saveDraft, 5000);
+
+function showRestorePrompt() {
+    const promptDiv = document.createElement('div');
+    promptDiv.className = 'alert alert-info alert-dismissible fade show';
+    promptDiv.setAttribute("id", "promptDiv");
+    promptDiv.innerHTML = `
+        <strong>Найден черновик!</strong> 
+        Хотите восстановить сохраненные данные?
+        <button type="button" class="btn btn-primary btn-sm ms-2" onclick="restoreDraft()">
+            Восстановить черновик
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="discardDraft()">
+            Отменить
+        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+
+    // Вставляем после заголовка
+    const titleRow = document.querySelector('.row:first-child');
+    titleRow.parentNode.insertBefore(promptDiv, titleRow.nextSibling);
+}
+
+function discardDraft() {
+    localStorage.removeItem(formDataKey);
+
+    // Удаляем prompt если он есть
+    const alertElement = document.querySelector('#promptDiv');
+    if (alertElement) {
+        alertElement.remove();
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     checkDraft();
