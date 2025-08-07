@@ -3,7 +3,8 @@ function copyToBuffer(text) {
     navigator.clipboard.writeText(text)
         .then(function () {
             // Этот код выполнится, если промис разрешился (успешное копирование)
-            alert('Текст успешно скопирован!');
+            // alert('Текст успешно скопирован!');
+            sendMessage('Текст успешно скопирован!');
         })
         .catch(function (err) {
             // Этот код выполнится, если промис был отклонён (ошибка копирования)
