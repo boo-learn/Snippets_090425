@@ -1,10 +1,9 @@
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
-from MainApp.models import Snippet, Comment, LANG_CHOICES
+from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from django.db.models import F, Q
-from MainApp.models import LANG_ICONS
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -18,10 +17,10 @@ logger = logging.getLogger(__name__)
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
-    messages.success(request,"Добро пожаловать на сайт")
-    messages.warning(request, "Доработать закрытие сообщений по таймеру")
-    messages.warning(request, "Доработать закрытие сообщений по таймеру")
-    messages.warning(request, "Доработать закрытие сообщений по таймеру")
+    # messages.success(request,"Добро пожаловать на сайт")
+    # messages.warning(request, "Доработать закрытие сообщений по таймеру")
+    # messages.warning(request, "Доработать закрытие сообщений по таймеру")
+    # messages.warning(request, "Доработать закрытие сообщений по таймеру")
     return render(request, 'pages/index.html', context)
 
 
@@ -234,3 +233,19 @@ def comment_add(request):
 
         return redirect('snippet-detail', id=snippet_id)
     raise Http404
+
+
+@login_required
+def user_notifications(request):
+    """Страница с уведомлениями пользователя"""
+    # Отмечаем все уведомления как прочитанные при переходе на страницу
+    ...
+
+    # Получаем все уведомления для авторизованного пользователя, сортируем по дате создания
+    notifications = Notification.objects.filter(recipient=request.user)
+
+    context = {
+        'pagename': 'Мои уведомления',
+        'notifications': notifications
+    }
+    return render(request, 'pages/notifications.html', context)
