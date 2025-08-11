@@ -261,10 +261,13 @@ def unread_notifications_count(request):
     import time
 
     # Максимальное время ожидания (30 секунд)
-    max_wait_time = 30
+    max_wait_time = 10
     check_interval = 1  # Проверяем каждую секунду
 
+    last_count = int(request.GET.get("last_count", 0))
+
     start_time = time.time()
+    unread_count = 0
 
     while time.time() - start_time < max_wait_time:
         # Получаем количество непрочитанных уведомлений
@@ -274,7 +277,7 @@ def unread_notifications_count(request):
         ).count()
 
         # Если есть непрочитанные уведомления, сразу отвечаем
-        if unread_count > 0:
+        if unread_count > last_count:
             return JsonResponse({
                 'success': True,
                 'unread_count': unread_count,
@@ -287,6 +290,6 @@ def unread_notifications_count(request):
     # Если время истекло и нет уведомлений, возвращаем 0
     return JsonResponse({
         'success': True,
-        'unread_count': 0,
+        'unread_count': unread_count,
         'timestamp': str(datetime.now())
     })
