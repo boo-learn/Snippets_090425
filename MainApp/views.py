@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification
@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from MainApp.signals import snippet_view
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -249,3 +250,43 @@ def user_notifications(request):
         'notifications': notifications
     }
     return render(request, 'pages/notifications.html', context)
+
+
+@login_required
+def unread_notifications_count(request):
+    """
+    API endpoint для получения количества непрочитанных уведомлений
+    Использует long polling - отвечает только если есть непрочитанные уведомления
+    """
+    import time
+
+    # Максимальное время ожидания (30 секунд)
+    max_wait_time = 30
+    check_interval = 1  # Проверяем каждую секунду
+
+    start_time = time.time()
+
+    while time.time() - start_time < max_wait_time:
+        # Получаем количество непрочитанных уведомлений
+        unread_count = Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).count()
+
+        # Если есть непрочитанные уведомления, сразу отвечаем
+        if unread_count > 0:
+            return JsonResponse({
+                'success': True,
+                'unread_count': unread_count,
+                'timestamp': str(datetime.now())
+            })
+
+        # Ждем перед следующей проверкой
+        time.sleep(check_interval)
+
+    # Если время истекло и нет уведомлений, возвращаем 0
+    return JsonResponse({
+        'success': True,
+        'unread_count': 0,
+        'timestamp': str(datetime.now())
+    })
