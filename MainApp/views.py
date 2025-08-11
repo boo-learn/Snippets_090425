@@ -293,3 +293,10 @@ def unread_notifications_count(request):
         'unread_count': unread_count,
         'timestamp': str(datetime.now())
     })
+
+
+def is_authenticated(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'is_authenticated': True})
+    else:
+        return JsonResponse({'is_authenticated': False})

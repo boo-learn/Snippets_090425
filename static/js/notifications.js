@@ -53,5 +53,9 @@ function poll() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    startPolling();
+    let isAuth = document.getElementById('isAuth').textContent;
+    if (isAuth === 'True') {
+        startPolling();
+    }
+
 });

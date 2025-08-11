@@ -19,5 +19,6 @@ urlpatterns = [
     path('comment/add', views.comment_add, name="comment_add"),
     path('notifications/', views.user_notifications, name="notifications"),
     path('api/notifications/unread-count', views.unread_notifications_count, name="unread_notifications_count"),
+    path('api/is_authenticated', views.is_authenticated, name="unread_notifications_count"),
 ]
 # url: snippet/2/delete
