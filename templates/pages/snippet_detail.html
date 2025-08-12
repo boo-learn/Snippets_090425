@@ -64,7 +64,8 @@
                     <hr>
                     <div class="row">
                         <div class="col-9">
-                            <div class="p-2 h-100 position-relative" style="border:1px solid #ced4da; border-radius:5px;">
+                            <div class="p-2 h-100 position-relative"
+                                 style="border:1px solid #ced4da; border-radius:5px;">
                                 <a onclick="copyToBuffer(`{{ snippet.code }}`)" class="copy-button" href="#">copy</a>
                                 <pre><code class="language-{{ snippet.lang }}">{{ snippet.code }}</code></pre>
                             </div>
@@ -142,12 +143,25 @@
                                 </p>
                                 <small>
                                     <a href="#" class="text-decoration-none me-2">Ответить</a>
-                                    <a href="#" class="text-decoration-none me-2">
-                                        <i class="fa-regular fa-thumbs-up"></i>
-                                    </a>
-                                    <a href="#" class="text-decoration-none">
-                                        <i class="fa-solid fa-thumbs-down"></i>
-                                    </a>
+{#                                    <a href="#" class="text-decoration-none me-2">#}
+{#                                        <i class="fa-regular fa-thumbs-up"></i>#}
+{#                                    </a>#}
+{#                                    <a href="#" class="text-decoration-none">#}
+{#                                        <i class="fa-solid fa-thumbs-down"></i>#}
+{#                                    </a>#}
+                                    <div class="d-inline-flex align-items-center me-3">
+                                        <button class="btn btn-sm btn-outline-success me-1"
+                                                title="Лайк">
+                                            <i class="fa-regular fa-thumbs-up"></i>
+                                        </button>
+                                        <span class="badge bg-success me-2">{{ comment.likes_count }}</span>
+
+                                        <button class="btn btn-sm btn-outline-danger me-1"
+                                                title="Дизлайк">
+                                            <i class="fa-solid fa-thumbs-down"></i>
+                                        </button>
+                                        <span class="badge bg-danger">{{ comment.dislikes_count }}</span>
+                                    </div>
                                 </small>
                             </div>
                         </li>
@@ -159,33 +173,11 @@
                 </ul>
             </div>
         </div>
-        {#        <div class="row">#}
-        {#            <div class="col">#}
-        {#                <table border="1">#}
-        {#                    <tr>#}
-        {#                        <th>Автор</th>#}
-        {#                        <th>Комментарий</th>#}
-        {#                        <th>Дата</th>#}
-        {#                    </tr>#}
-        {#                    {% for comment in comments %}#}
-        {#                        <tr>#}
-        {#                            <td>{{ comment.author.username }}</td>#}
-        {#                            <td>{{ comment.text }}</td>#}
-        {#                            <td>{{ comment.creation_date|date:"Y-m-d H:i" }}</td>#}
-        {#                        </tr>#}
-        {#                    {% empty %}#}
-        {#                        <tr>#}
-        {#                            <td colspan="3">Пока нет комментариев. Будьте первым!</td>#}
-        {#                        </tr>#}
-        {#                    {% endfor %}#}
-        {#                </table>#}
-        {#            </div>#}
-        {#        </div>#}
     </div>
 
 {% endblock %}
 {% block scripts %}
-	{{ block.super }}
+    {{ block.super }}
     <script src="{% static 'js/prism.js' %}"></script>
     <script src="{% static 'js/utils.js' %}"></script>
 {% endblock %}
