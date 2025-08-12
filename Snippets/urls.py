@@ -22,3 +22,6 @@ urlpatterns = [
     path('api/is_authenticated', views.is_authenticated, name="unread_notifications_count"),
 ]
 # url: snippet/2/delete
+
+# /notification/5/delete
+# /notifications/read/delete
