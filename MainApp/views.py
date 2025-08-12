@@ -1,7 +1,8 @@
+from django.db import IntegrityError
 from django.http import Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
-from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification
+from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification, LikeDislike
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from django.db.models import F, Q
 from django.contrib import auth
@@ -300,3 +301,28 @@ def is_authenticated(request):
         return JsonResponse({'is_authenticated': True})
     else:
         return JsonResponse({'is_authenticated': False})
+
+
+@login_required
+def comment_like(request, id, vote):
+    comment = get_object_or_404(Comment, id=id)
+    user = request.user
+
+    # print(f"{vote=}")
+    try:
+        LikeDislike.objects.create(
+            user=user,
+            vote=vote,
+            content_object=comment
+        )
+    except IntegrityError:
+        like = LikeDislike.objects.get(user=user, object_id=id)
+        like.delete()
+
+    LikeDislike.objects.create(
+        user=user,
+        vote=vote,
+        content_object=comment
+    )
+
+    return redirect('snippet-detail', id=comment.snippet.id)
