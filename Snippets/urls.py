@@ -20,8 +20,10 @@ urlpatterns = [
     path('notifications/', views.user_notifications, name="notifications"),
     path('api/notifications/unread-count', views.unread_notifications_count, name="unread_notifications_count"),
     path('api/is_authenticated', views.is_authenticated, name="unread_notifications_count"),
-    path('comment/<int:id>/liked', views.comment_like, {'vote': 1}, name="comment-like"),
-    path('comment/<int:id>/disliked', views.comment_like, {'vote': -1}, name="comment-dislike"),
+    path('api/comment/like', views.add_commen_like, name="unread_notifications_count"),
+    # path('comment/<int:id>/liked', views.comment_like, {'vote': 1}, name="comment-like"),
+    # path('comment/<int:id>/disliked', views.comment_like, {'vote': -1}, name="comment-dislike"),
+
 ]
 # url: snippet/2/delete
 

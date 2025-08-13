@@ -132,7 +132,7 @@
             <div class="col-8">
                 <ul class="list-group mb-3">
                     {% for comment in comments %}
-                        <li class="list-group-item d-flex align-items-start">
+                        <li id="{{ comment.id }}" class="list-group-item d-flex align-items-start">
                             <div class="w-100">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{ comment.author }}</h5>
@@ -150,7 +150,8 @@
                                     {#                                        <i class="fa-solid fa-thumbs-down"></i>#}
                                     {#                                    </a>#}
                                     <div class="d-inline-flex align-items-center me-3">
-                                        <a href="{% url 'comment-like' comment.id %}">
+                                        {#                                        <a href="{% url 'comment-like' comment.id %}">#}
+                                        <a href="#" onclick="voteComment(event,{{ comment.id }}, 1)">
                                             <button class="btn btn-sm btn-outline-success me-1"
                                                     title="Лайк">
                                                 <i class="fa-regular fa-thumbs-up"></i>
@@ -158,7 +159,8 @@
                                         </a>
                                         <span class="badge bg-success me-2">{{ comment.likes_count }}</span>
 
-                                        <a href="{% url 'comment-dislike' comment.id %}">
+                                        {#                                        <a href="{% url 'comment-dislike' comment.id %}">#}
+                                        <a href="#" onclick="voteComment(event,{{ comment.id }}, -1)">
                                             <button class="btn btn-sm btn-outline-danger me-1"
                                                     title="Дизлайк">
                                                 <i class="fa-solid fa-thumbs-down"></i>
@@ -184,4 +186,39 @@
     {{ block.super }}
     <script src="{% static 'js/prism.js' %}"></script>
     <script src="{% static 'js/utils.js' %}"></script>
+    <script>
+        function voteComment(event, commentId, vote) {
+            event.preventDefault();
+            fetch('/api/comment/like', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: JSON.stringify({
+                    comment_id: commentId,
+                    vote: vote
+                })
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data.success) {
+                        let likesCount = data.likes_count;
+                        let dislikesCount = data.dislikes_count;
+                        {#console.log(`likesCount=${likesCount}`);#}
+                        {#console.log(`dislikesCount=${dislikesCount}`);#}
+                        let parentComment = document.getElementById(commentId);
+                        let likeElement = parentComment.querySelector(".badge.bg-success");
+                        let dislikeElement = parentComment.querySelector(".badge.bg-danger");
+                        likeElement.innerHTML = likesCount;
+                        dislikeElement.innerHTML = dislikesCount;
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Ошибка при получении уведомлений:', error);
+                });
+        }
+    </script>
 {% endblock %}
