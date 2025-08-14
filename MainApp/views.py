@@ -360,10 +360,13 @@ def add_commen_like(request):
 
         return JsonResponse(response_data)
 
-
+# profile?tab="info"
+# profile?tab="history"
 def user_profile(request):
+    tab = request.GET.get("tab", "info")
     context = {
         "profile_user": request.user,
+        "tab": tab
     }
     return render(request, 'pages/user_profile.html', context)
 
