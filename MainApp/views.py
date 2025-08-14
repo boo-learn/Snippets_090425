@@ -359,3 +359,18 @@ def add_commen_like(request):
         }
 
         return JsonResponse(response_data)
+
+
+def user_profile(request):
+    context = {
+        "profile_user": request.user,
+    }
+    return render(request, 'pages/user_profile.html', context)
+
+
+def edit_profile(request):
+    ...
+
+
+def password_change(request):
+    ...
