@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from MainApp import views
 from django.contrib import admin
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls, name="admin"),
@@ -26,13 +27,11 @@ urlpatterns = [
     path('api/comment/like', views.add_commen_like, name="unread_notifications_count"),
     # path('comment/<int:id>/liked', views.comment_like, {'vote': 1}, name="comment-like"),
     # path('comment/<int:id>/disliked', views.comment_like, {'vote': -1}, name="comment-dislike"),
+]+ debug_toolbar_urls()
 
-]
-# url: snippet/2/delete
 
 # /notification/5/delete
 # /notifications/read/delete
 
 # /comment/3/like
 # /comment/2/dislike
-
