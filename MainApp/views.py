@@ -243,7 +243,7 @@ def comment_add(request):
 def user_notifications(request):
     """Страница с уведомлениями пользователя"""
     # Получаем все уведомления для авторизованного пользователя, сортируем по дате создания
-    notifications = list(Notification.objects.filter(recipient=request.user))
+    notifications = list(Notification.objects.filter(recipient=request.user).select_related("comment__snippet"))
 
     # Отмечаем все уведомления как прочитанные при переходе на страницу
     Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
