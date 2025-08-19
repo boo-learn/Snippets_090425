@@ -187,14 +187,13 @@ def login(request):
 
         # 1. Если логин/пароль верные и активный -> авторизуем пользователя
         # 2. Если логин/пароль верные и НЕактивный -> error: Ваш аккаунт не подтвержден
-        3
-        #. Если логин/пароль НЕверные -> error: Неверные username или password
+        # 3. Если логин/пароль НЕверные -> error: Неверные username или password
 
         user = auth.authenticate(request, username=username, password=password)
-        if user is not None: # 1
+        if user is not None:  # 1
             auth.login(request, user)
             return redirect('home')
-        else: # 2/3
+        else:  # 2/3
             try:
                 user = User.objects.get(username=username)
                 if not user.check_password(password):
@@ -204,7 +203,7 @@ def login(request):
                     "errors": ["Ваш аккаунт не подтвержден. Проверьте email для подтверждения"],
                     "username": username
                 }
-            except User.DoesNotExist: # 3
+            except User.DoesNotExist:  # 3
                 context = {
                     "errors": ["Неверные username или password"],
                     "username": username
@@ -446,3 +445,21 @@ def activate_account(request, user_id, token):
     except User.DoesNotExist:
         messages.error(request, 'Пользователь не найден.')
         return redirect('home')
+
+
+# GET / POST
+def resend_email(request):
+    if request.method == 'GET':
+        return render(request, 'pages/resend_email.html')
+    elif request.method == 'POST':
+        email = request.POST.get("email")
+        # TODO: добавить валидацию email
+        user = User.objects.get(email=email)
+        try:
+            send_activation_email(user, request)
+            messages.success(request, "Повторный email отправлен. Проверьте почту.")
+        except:
+            messages.error(request, "Отправить email не удалось.")
+        return redirect('home')
+    else:
+        raise Http404
