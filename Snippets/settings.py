@@ -176,6 +176,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Django Extensions Shell Plus Configuration
 SHELL_PLUS_PRE_IMPORTS = [
     ('MainApp.factories', ('UserFactory', 'TagFactory', 'SnippetFactory', 'CommentFactory')),

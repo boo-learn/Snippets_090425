@@ -16,6 +16,8 @@ import logging
 import json
 from datetime import datetime
 
+from MainApp.utils import verify_activation_token, send_activation_email
+
 logger = logging.getLogger(__name__)
 
 
@@ -78,7 +80,8 @@ def snippets_page(request, my_snippets, num_snippets_on_page=5):
     else:
         pagename = 'Просмотр сниппетов'
         if request.user.is_authenticated:  # auth: all public + self private
-            snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user)).select_related("user")
+            snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user)).select_related(
+                "user")
         else:  # not auth: all public
             snippets = Snippet.objects.filter(public=True).select_related("user")
 
@@ -182,15 +185,30 @@ def login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
+        # 1. Если логин/пароль верные и активный -> авторизуем пользователя
+        # 2. Если логин/пароль верные и НЕактивный -> error: Ваш аккаунт не подтвержден
+        3
+        #. Если логин/пароль НЕверные -> error: Неверные username или password
+
         user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
+        if user is not None: # 1
             auth.login(request, user)
             return redirect('home')
-        else:
-            context = {
-                "errors": ["Неверные username или password"],
-                "username": username
-            }
+        else: # 2/3
+            try:
+                user = User.objects.get(username=username)
+                if not user.check_password(password):
+                    raise User.DoesNotExist()
+                # 2
+                context = {
+                    "errors": ["Ваш аккаунт не подтвержден. Проверьте email для подтверждения"],
+                    "username": username
+                }
+            except User.DoesNotExist: # 3
+                context = {
+                    "errors": ["Неверные username или password"],
+                    "username": username
+                }
             return render(request, "pages/index.html", context)
 
 
@@ -211,6 +229,7 @@ def user_registration(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            send_activation_email(user, request)
             messages.success(request, f"Пользователь {user.username} успешно зарегистрирован!")
             return redirect('home')
         else:
@@ -360,6 +379,7 @@ def add_commen_like(request):
 
         return JsonResponse(response_data)
 
+
 # profile?tab="info"
 # profile?tab="history"
 def user_profile(request):
@@ -397,3 +417,32 @@ def edit_profile(request):
 
 def password_change(request):
     ...
+
+
+def activate_account(request, user_id, token):
+    """
+    Подтверждение аккаунта пользователя по токену
+    """
+    try:
+        user = User.objects.get(id=user_id)
+
+        # Проверяем, не подтвержден ли уже аккаунт
+        if user.is_active:
+            messages.info(request, 'Ваш аккаунт уже подтвержден.')
+            return redirect('home')
+
+        # Проверяем токен
+        if verify_activation_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.success(request,
+                             'Ваш аккаунт успешно подтвержден! Теперь вы можете войти в систему.')
+            return redirect('home')
+        else:
+            messages.error(request,
+                           'Недействительная ссылка для подтверждения. Возможно, она устарела.')
+            return redirect('home')
+
+    except User.DoesNotExist:
+        messages.error(request, 'Пользователь не найден.')
+        return redirect('home')

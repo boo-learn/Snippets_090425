@@ -22,6 +22,8 @@ urlpatterns = [
     path('profile/', views.user_profile, name="profile"),
     path('profile/edit/', views.edit_profile, name="edit-profile"),
     path('password/change/', views.password_change, name="password_change"),
+    path('activate/<int:user_id>/<str:token>/', views.activate_account, name="activate-account"),
+
     path('api/notifications/unread-count', views.unread_notifications_count, name="unread_notifications_count"),
     path('api/is_authenticated', views.is_authenticated, name="unread_notifications_count"),
     path('api/comment/like', views.add_commen_like, name="unread_notifications_count"),
