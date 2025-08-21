@@ -8,7 +8,8 @@ from django.views.generic import CreateView, DetailView, View, ListView, UpdateV
 from django.shortcuts import render, redirect
 
 from MainApp.models import Snippet, LANG_CHOICES
-from MainApp.forms import SnippetForm, CommentForm
+from MainApp.forms import SnippetForm, CommentForm, UserRegistrationForm
+from MainApp.utils import send_activation_email
 
 
 class AddSnippetView(LoginRequiredMixin, CreateView):
@@ -137,5 +138,21 @@ class SnippetEditView(UpdateView):
         context['id'] = self.kwargs.get('id')
         return context
 
-    # def get_queryset(self):
-    #     return
+
+class UserRegistrationView(CreateView):
+    """Регистрация нового пользователя"""
+    model = User
+    form_class = UserRegistrationForm
+    template_name = 'pages/registration.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pagename'] = 'Регистрация'
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        send_activation_email(user, self.request)
+        messages.success(self.request, f"Пользователь {user.username} успешно зарегистрирован!")
+        return super().form_valid(form)
