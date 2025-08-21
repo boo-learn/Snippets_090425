@@ -16,8 +16,10 @@ urlpatterns = [
     path('snippets/my', views_cbv.SnippetsListView.as_view(), {'my_snippets': True}, name="snippets-my"),
     # path('snippet/<int:id>', views.snippet_detail, name="snippet-detail"),
     path('snippet/<int:id>', views_cbv.SnippetDetailView.as_view(), name="snippet-detail"),
+    # path('snippet/<int:id>/edit', views.snippet_edit, name="snippet-edit"),
+    path('snippet/<int:id>/edit', views_cbv.SnippetEditView.as_view(), name="snippet-edit"),
     path('snippet/<int:id>/delete', views.snippet_delete, name="snippet-delete"),
-    path('snippet/<int:id>/edit', views.snippet_edit, name="snippet-edit"),
+
     path('login', views.login, name="login"),
     # path('logout', views.user_logout, name='logout'),
     path('logout', views_cbv.LogoutView.as_view(), name='logout'),

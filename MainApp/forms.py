@@ -21,8 +21,8 @@ class SnippetForm(forms.ModelForm):
         if len(name) < 3:
             raise forms.ValidationError("Name too short")
 
-        if len(name) > 20:
-            raise forms.ValidationError("Name too long")
+        # if len(name) > 20:
+        #     raise forms.ValidationError("Name too long")
         return name
 
 

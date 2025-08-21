@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.contrib import messages, auth
-from django.views.generic import CreateView, DetailView, View, ListView
+from django.views.generic import CreateView, DetailView, View, ListView, UpdateView
 from django.shortcuts import render, redirect
 
 from MainApp.models import Snippet, LANG_CHOICES
@@ -121,3 +121,21 @@ class SnippetsListView(ListView):
         })
 
         return context
+
+
+class SnippetEditView(UpdateView):
+    model = Snippet
+    form_class = SnippetForm
+    template_name = 'pages/add_snippet.html'
+    success_url = reverse_lazy('snippets-list')
+    pk_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_name'] =  "Редактировать Сниппет"
+        context['edit'] =  True
+        context['id'] = self.kwargs.get('id')
+        return context
+
+    # def get_queryset(self):
+    #     return
