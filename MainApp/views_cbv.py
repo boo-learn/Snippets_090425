@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.contrib import messages, auth
+from django.views.generic import CreateView, DetailView, View
+from django.shortcuts import render, redirect
 
 from MainApp.models import Snippet
 from MainApp.forms import SnippetForm, CommentForm
-from django.contrib import messages
 
 
 class AddSnippetView(LoginRequiredMixin, CreateView):
@@ -40,3 +41,9 @@ class SnippetDetailView(DetailView):
 
     def get_queryset(self):
         return Snippet.objects.prefetch_related("comments")
+
+
+class LogoutView(View):
+    def get(self, request):
+        auth.logout(request)
+        return redirect('home')
