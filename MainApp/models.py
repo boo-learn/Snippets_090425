@@ -17,6 +17,8 @@ LANG_ICONS = {
     "java": "fa-java",
 }
 
+User._meta.get_field('email')._unique = True
+
 
 class LikeDislike(models.Model):
     LIKE = 1
@@ -47,6 +49,11 @@ class Tag(models.Model):
 class Snippet(models.Model):
     class Meta:
         ordering = ['name', 'lang']
+        indexes = [
+            models.Index(fields=['name', 'lang']),
+            models.Index(fields=['lang', 'name']),
+            models.Index(fields=['user', 'name', 'lang']),
+        ]
 
     name = models.CharField(max_length=100)
     lang = models.CharField(max_length=30, choices=LANG_CHOICES)
