@@ -177,7 +177,7 @@
 
                     {# Ссылка на следующую страницу #}
                     <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
-                    <a class="page-link"
+                    <a class="page-link"></a>
                     {#                                   {% if page_obj.has_next %}href="?page={{ page_obj.next_page_number }}"{% endif %}>Следующая</a>#}
                     {% if page_obj.has_next %}href={% querystring page=page_obj.next_page_number %}"{% endif %}>Следующая</a>
                             </li>
