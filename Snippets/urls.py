@@ -38,8 +38,24 @@ urlpatterns = [
     path('api/comment/like', views.add_commen_like, name="unread_notifications_count"),
     # path('comment/<int:id>/liked', views.comment_like, {'vote': 1}, name="comment-like"),
     # path('comment/<int:id>/disliked', views.comment_like, {'vote': -1}, name="comment-dislike"),
-]+ debug_toolbar_urls()
+]
 
+# Добавляем debug_toolbar URLs только в режиме разработки
+if settings.DEBUG:
+    try:
+        import debug_toolbar
+
+        urlpatterns += [
+            path('__debug__/', include(debug_toolbar.urls)),
+        ]
+    except ImportError:
+        pass
+
+# Добавляем обработку статических файлов только в режиме разработки
+# В продакшене Django использует встроенную обработку статических файлов
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # /notification/5/delete
 # /notifications/read/delete
