@@ -25,6 +25,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '#%3rmpy6hb52y7j^tu7g*v$762rc0&f+26yy3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
+print(f"DEBUG={DEBUG}")
+
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 INTERNAL_IPS = [
@@ -89,7 +91,7 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 if DEBUG:
-    INSTALLED_APPS.insert(0, 'debug_toolbar',)
+    INSTALLED_APPS.insert(0, 'debug_toolbar')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
