@@ -1,13 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.urls import reverse_lazy
 from django.contrib import messages, auth
 from django.views.generic import CreateView, DetailView, View, ListView, UpdateView
 from django.shortcuts import render, redirect
 
-from MainApp.models import Snippet, LANG_CHOICES
+from MainApp.models import Snippet, LANG_CHOICES, Comment
 from MainApp.forms import SnippetForm, CommentForm, UserRegistrationForm
 from MainApp.utils import send_activation_email
 
@@ -37,14 +37,17 @@ class SnippetDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        snippet = self.get_object()
+        snippet = self.object
         context['pagename'] = f'Сниппет: {snippet.name}'
         context['comments'] = snippet.comments.all()
         context['comment_form'] = CommentForm()
         return context
 
     def get_queryset(self):
-        return Snippet.objects.prefetch_related("comments")
+        return Snippet.objects.prefetch_related(  # Используем аннотации для комментариев
+            Prefetch('comments',
+                     queryset=Comment.with_likes_count().select_related('author')),
+            "tags")
 
 
 class LogoutView(View):
@@ -133,8 +136,8 @@ class SnippetEditView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_name'] =  "Редактировать Сниппет"
-        context['edit'] =  True
+        context['page_name'] = "Редактировать Сниппет"
+        context['edit'] = True
         context['id'] = self.kwargs.get('id')
         return context
 
