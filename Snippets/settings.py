@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', '#%3rmpy6hb52y7j^tu7g*v$762rc0&f+26yy3x!j&+@s4(ndq@')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get('DEBUG', '1') == '1'
 
 print(f"DEBUG={DEBUG}")
 
@@ -148,9 +148,12 @@ if os.environ.get('DATABASE_URL'):
 else:
     # Разработка - SQLite
     DATABASES = {'default': {
-        'ENGINE': 'django.db.backends.postgresql', 'NAME': os.environ.get('DB_NAME', 'postgres'),
-        'USER': os.environ.get('DB_USER', 'postgres'), 'PASSWORD': os.environ.get('DB_PASSWORD', 'mysecretpassword'),
-        'HOST': os.environ.get('DB_HOST', 'some-postgres'), 'PORT': os.environ.get('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'mysecretpassword'),
+        "HOST": os.environ.get('SQL_HOST', "localhost"),
+        'PORT': os.environ.get('SQL_PORT', '5432'),
     }}
 
 # Password validation

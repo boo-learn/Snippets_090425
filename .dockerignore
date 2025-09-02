@@ -7,3 +7,5 @@ build.sh
 demo.sql
 django_debug.log
 db.sqlite3
+*.yml
+*.yaml
