@@ -146,7 +146,6 @@ if os.environ.get('DATABASE_URL'):
         }
     }
 else:
-    # Разработка - SQLite
     DATABASES = {'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
